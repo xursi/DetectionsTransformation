@@ -32,7 +32,7 @@ class Filtering(Component):
         for raw_detection in self.input_detections:
             detection = Detection.parse_obj(raw_detection)
 
-            if self.filter_type == "FilterByLabel" and self.allowed_labels and detection.classLabel not in self.allowed_labels:
+            if self.filter_type == "FilterByLabel"  and (detection.classLabel not in self.allowed_labels):
                 continue
 
             transformed.append(detection.dict())
