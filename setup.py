@@ -4,7 +4,7 @@ from setuptools import setup
 setup(
     name="novavision-detection-transformation",
     version="0.1.0",
-    description="Simple detection filtering and label-renaming component for NovaVision",
+    description="Simple task-based detection filtering component for NovaVision",
     install_requires=["sdk"],
     packages=[
         "novavision.detection_transformation",

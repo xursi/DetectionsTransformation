@@ -1,6 +1,6 @@
 from typing import List, Literal, Optional, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from sdks.novavision.src.base.model import Config, Configs, Input, Inputs, Output, Outputs, Package, Request, Response
 
@@ -39,28 +39,6 @@ class OutputDetections(Output):
         title = "Transformed Detections"
 
 
-class ConfigMinConfidence(Config):
-    name: Literal["minConfidence"] = "minConfidence"
-    value: float = Field(default=0.0, ge=0.0, le=1.0)
-    type: Literal["number"] = "number"
-    field: Literal["textInput"] = "textInput"
-
-    class Config:
-        title = "Minimum Confidence"
-        json_schema_extra = {"shortDescription": "Keep detections with this score or higher. 0 disables the limit."}
-
-
-class ConfigMaxConfidence(Config):
-    name: Literal["maxConfidence"] = "maxConfidence"
-    value: float = Field(default=1.0, ge=0.0, le=1.0)
-    type: Literal["number"] = "number"
-    field: Literal["textInput"] = "textInput"
-
-    class Config:
-        title = "Maximum Confidence"
-        json_schema_extra = {"shortDescription": "Keep detections with this score or lower. 1 disables the limit."}
-
-
 class ConfigAllowedLabels(Config):
     name: Literal["allowedLabels"] = "allowedLabels"
     value: str = ""
@@ -73,73 +51,71 @@ class ConfigAllowedLabels(Config):
         json_schema_extra = {"shortDescription": "Comma-separated labels to keep. Leave empty to keep all labels."}
 
 
-class ConfigRenameSourceLabel(Config):
-    name: Literal["renameSourceLabel"] = "renameSourceLabel"
-    value: str = ""
+class ConfigFilterByLabel(Config):
+    allowedLabels: ConfigAllowedLabels
+    name: Literal["FilterByLabel"] = "FilterByLabel"
+    value: Literal["FilterByLabel"] = "FilterByLabel"
     type: Literal["string"] = "string"
-    field: Literal["textInput"] = "textInput"
+    field: Literal["option"] = "option"
 
     class Config:
-        title = "Rename Source Label"
+        title = "By Label"
 
 
-class ConfigRenameTargetLabel(Config):
-    name: Literal["renameTargetLabel"] = "renameTargetLabel"
-    value: str = ""
-    type: Literal["string"] = "string"
-    field: Literal["textInput"] = "textInput"
+class ConfigFilterType(Config):
+    name: Literal["filterType"] = "filterType"
+    value: ConfigFilterByLabel
+    type: Literal["object"] = "object"
+    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
 
     class Config:
-        title = "Rename Target Label"
+        title = "Filter Type"
+        json_schema_extra = {"shortDescription": "Choose the detection field used for filtering."}
 
 
-class TransformationInputs(Inputs):
+class FilteringInputs(Inputs):
     inputDetections: InputDetections
 
 
-class TransformationConfigs(Configs):
-    minConfidence: ConfigMinConfidence
-    maxConfidence: ConfigMaxConfidence
-    allowedLabels: ConfigAllowedLabels
-    renameSourceLabel: ConfigRenameSourceLabel
-    renameTargetLabel: ConfigRenameTargetLabel
+class FilteringConfigs(Configs):
+    filterType: ConfigFilterType
 
 
-class TransformationOutputs(Outputs):
+class FilteringOutputs(Outputs):
     outputDetections: OutputDetections
 
 
-class TransformationRequest(Request):
-    inputs: TransformationInputs
-    configs: TransformationConfigs
+class FilteringRequest(Request):
+    inputs: FilteringInputs
+    configs: FilteringConfigs
 
     class Config:
         json_schema_extra = {"target": "configs"}
 
 
-class TransformationResponse(Response):
-    outputs: TransformationOutputs
+class FilteringResponse(Response):
+    outputs: FilteringOutputs
 
 
-class TransformationExecutor(Config):
-    name: Literal["DetectionTransformation"] = "DetectionTransformation"
-    value: Union[TransformationRequest, TransformationResponse]
+class FilteringExecutor(Config):
+    name: Literal["Filtering"] = "Filtering"
+    value: Union[FilteringRequest, FilteringResponse]
     type: Literal["object"] = "object"
     field: Literal["option"] = "option"
 
     class Config:
-        title = "Detection Transformation"
+        title = "Filtering"
         json_schema_extra = {"target": {"value": 0}}
 
 
 class ConfigExecutor(Config):
     name: Literal["ConfigExecutor"] = "ConfigExecutor"
-    value: TransformationExecutor
+    value: FilteringExecutor
     type: Literal["executor"] = "executor"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
 
     class Config:
-        title = "TASK"
+        title = "Task"
 
 
 class PackageConfigs(Configs):

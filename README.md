@@ -1,12 +1,14 @@
 # Detection Transformation
 
-NovaVision component that filters YOLO detections by confidence and class labels,
-and can rename one class label. Bounding-box, class ID, keypoints, and image UID
-are preserved in the output.
+NovaVision component for applying exactly one transformation to YOLO detections.
+The first available task is filtering by class label. Bounding-box, confidence,
+class ID, keypoints, and image UID are preserved in the output.
 
 ## Settings
 
-- **Minimum confidence:** Keep detections at or above this score (`0` disables it).
-- **Maximum confidence:** Keep detections at or below this score (`1` disables it).
+- **Task:** Select `Filtering`.
+- **Filter type:** Select `By Label`.
 - **Allowed labels:** Comma-separated labels to keep; leave empty to keep all.
-- **Rename source label / target label:** Rename only when both fields are set.
+
+Future tasks, such as label renaming and filtering by position or bounding-box
+area, can be added as separate options under **Task** or **Filter type**.
