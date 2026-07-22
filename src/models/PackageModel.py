@@ -27,7 +27,7 @@ class InputDetections(Input):
     type: Literal["list"] = "list"
 
     class Config:
-        title = "YOLO Detections"
+        title = "Detections"
 
 
 class OutputDetections(Output):
@@ -36,7 +36,7 @@ class OutputDetections(Output):
     type: Literal["list"] = "list"
 
     class Config:
-        title = "Transformed Detections"
+        title = "Detections"
 
 
 class ConfigAllowedLabels(Config):
