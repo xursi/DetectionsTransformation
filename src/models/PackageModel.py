@@ -2,10 +2,10 @@ from typing import List, Literal, Optional, Union
 
 from pydantic import BaseModel
 
-from sdks.novavision.src.base.model import Config, Configs, Input, Inputs, Output, Outputs, Package, Request, Response
+from sdks.novavision.src.base.model import Config, Configs, Input, Inputs, Output, Outputs, Package, Request, Response, Detection, BoundingBox
 
 
-class BoundingBox(BaseModel):
+"""class BoundingBox(BaseModel):
     left: float
     top: float
     width: float
@@ -18,7 +18,7 @@ class Detection(BaseModel):
     classLabel: str
     classId: int
     keyPoints: Optional[object] = None
-    imgUID: str
+    imgUID: str"""
 
 
 class InputDetections(Input):

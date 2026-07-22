@@ -6,8 +6,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")
 from sdks.novavision.src.base.component import Component
 from sdks.novavision.src.helper.executor import Executor
 
-from src.models.PackageModel import Detection, PackageModel
-from src.utils.response import build_response
+from components.DetectionTransformation.src.models.PackageModel import Detection, PackageModel
+from components.DetectionTransformation.src.utils.response import build_response
 
 
 class Filtering(Component):

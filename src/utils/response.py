@@ -1,6 +1,6 @@
 from sdks.novavision.src.helper.package import PackageHelper
 
-from src.models.PackageModel import (
+from components.DetectionTransformation.src.models.PackageModel import (
     ConfigExecutor,
     FilteringExecutor,
     FilteringOutputs,
