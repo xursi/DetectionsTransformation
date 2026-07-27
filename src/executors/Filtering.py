@@ -25,6 +25,7 @@ class Filtering(Component):
 
     @staticmethod
     def _parse_labels(value):
+        print(f"Parsing allowed labels: {value}")
         return {label.strip() for label in str(value or "").split(",") if label.strip()}
 
     def transform(self):
@@ -32,6 +33,7 @@ class Filtering(Component):
         for raw_detection in self.input_detections:
             detection = Detection.parse_obj(raw_detection)
 
+            print(f"Processing detection: {detection.classLabel}")
             if self.filter_type == "FilterByLabel"  and self.allowed_labels and detection.classLabel not in self.allowed_labels:
                 continue
 
