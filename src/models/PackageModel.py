@@ -94,9 +94,136 @@ class FilteringExecutor(Config):
         json_schema_extra = {"target": {"value": 0}}
 
 
+class ConfigAdjustmentTargetLabels(Config):
+    name: Literal["targetLabels"] = "targetLabels"
+    value: str = ""
+    type: Literal["string"] = "string"
+    field: Literal["textInput"] = "textInput"
+    placeHolder: Literal["car, person"] = "car, person"
+
+    class Config:
+        title = "Target Labels"
+        json_schema_extra = {"shortDescription": "Target labels to adjust. Leave empty to adjust all."}
+
+
+class ConfigShiftX(Config):
+    name: Literal["shiftX"] = "shiftX"
+    value: float = 0.0
+    type: Literal["number"] = "number"
+    field: Literal["textInput"] = "textInput"
+
+    class Config:
+        title = "Shift X (Pixels)"
+        json_schema_extra = {"shortDescription": "Horizontal shift. Positive moves right, negative moves left."}
+
+
+class ConfigShiftY(Config):
+    name: Literal["shiftY"] = "shiftY"
+    value: float = 0.0
+    type: Literal["number"] = "number"
+    field: Literal["textInput"] = "textInput"
+
+    class Config:
+        title = "Shift Y (Pixels)"
+        json_schema_extra = {"shortDescription": "Vertical shift. Positive moves down, negative moves up."}
+
+
+class ConfigAdjustmentShift(Config):
+    shiftX: ConfigShiftX
+    shiftY: ConfigShiftY
+    name: Literal["Shift"] = "Shift"
+    value: Literal["Shift"] = "Shift"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Shift"
+
+
+class ConfigScaleWidth(Config):
+    name: Literal["scaleWidth"] = "scaleWidth"
+    value: float = 1.0
+    type: Literal["number"] = "number"
+    field: Literal["textInput"] = "textInput"
+
+    class Config:
+        title = "Scale Width (Multiplier)"
+        json_schema_extra = {"shortDescription": "Width multiplier. E.g., 1.2 to enlarge by 20%."}
+
+
+class ConfigScaleHeight(Config):
+    name: Literal["scaleHeight"] = "scaleHeight"
+    value: float = 1.0
+    type: Literal["number"] = "number"
+    field: Literal["textInput"] = "textInput"
+
+    class Config:
+        title = "Scale Height (Multiplier)"
+        json_schema_extra = {"shortDescription": "Height multiplier. E.g., 0.8 to shrink by 20%."}
+
+
+class ConfigAdjustmentResize(Config):
+    scaleWidth: ConfigScaleWidth
+    scaleHeight: ConfigScaleHeight
+    name: Literal["Resize"] = "Resize"
+    value: Literal["Resize"] = "Resize"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Resize (Scale)"
+
+
+class ConfigAdjustmentType(Config):
+    name: Literal["adjustmentType"] = "adjustmentType"
+    value: Union[ConfigAdjustmentShift, ConfigAdjustmentResize]
+    type: Literal["object"] = "object"
+    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
+
+    class Config:
+        title = "Adjustment Type"
+        json_schema_extra = {"shortDescription": "Select whether to shift or resize the bounding boxes."}
+
+
+class AdjustmentInputs(Inputs):
+    inputDetections: InputDetections
+
+
+class AdjustmentConfigs(Configs):
+    targetLabels: ConfigAdjustmentTargetLabels
+    adjustmentType: ConfigAdjustmentType
+
+
+class AdjustmentOutputs(Outputs):
+    outputDetections: OutputDetections
+
+
+class AdjustmentRequest(Request):
+    inputs: AdjustmentInputs
+    configs: AdjustmentConfigs
+
+    class Config:
+        json_schema_extra = {"target": "configs"}
+
+
+class AdjustmentResponse(Response):
+    outputs: AdjustmentOutputs
+
+
+class DetectionAdjustmentExecutor(Config):
+    name: Literal["DetectionAdjustment"] = "DetectionAdjustment"
+    value: Union[AdjustmentRequest, AdjustmentResponse]
+    type: Literal["object"] = "object"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Detection Adjustment"
+        json_schema_extra = {"target": {"value": 0}}
+
+
 class ConfigExecutor(Config):
     name: Literal["ConfigExecutor"] = "ConfigExecutor"
-    value: FilteringExecutor
+    value: Union[FilteringExecutor, DetectionAdjustmentExecutor]
     type: Literal["executor"] = "executor"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
 
