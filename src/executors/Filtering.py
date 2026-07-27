@@ -2,7 +2,7 @@ import os
 import sys
 import traceback
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../..")))
 
 from sdks.novavision.src.base.component import Component
 from sdks.novavision.src.helper.executor import Executor
