@@ -2,7 +2,7 @@ from sdks.novavision.src.helper.package import PackageHelper
 
 from components.DetectionTransformation.src.models.PackageModel import (
     ConfigExecutor,
-    FilteringExecutor,
+    DetectionsFilteringExecutor,
     FilteringOutputs,
     FilteringResponse,
     OutputDetections,
@@ -17,7 +17,7 @@ from components.DetectionTransformation.src.models.PackageModel import (
 def build_response(context):
     outputs = FilteringOutputs(outputDetections=OutputDetections(value=context.detections))
     response = FilteringResponse(outputs=outputs)
-    executor = ConfigExecutor(value=FilteringExecutor(value=response))
+    executor = ConfigExecutor(value=DetectionsFilteringExecutor(value=response))
     package_configs = PackageConfigs(executor=executor)
     return PackageHelper(packageModel=PackageModel, packageConfigs=package_configs).build_model(context)
 

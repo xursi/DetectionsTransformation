@@ -83,14 +83,14 @@ class FilteringResponse(Response):
     outputs: FilteringOutputs
 
 
-class FilteringExecutor(Config):
-    name: Literal["Filtering"] = "Filtering"
+class DetectionsFilteringExecutor(Config):
+    name: Literal["DetectionsFiltering"] = "DetectionsFiltering"
     value: Union[FilteringRequest, FilteringResponse]
     type: Literal["object"] = "object"
     field: Literal["option"] = "option"
 
     class Config:
-        title = "Filtering"
+        title = "Detections Filtering"
         json_schema_extra = {"target": {"value": 0}}
 
 
@@ -223,7 +223,7 @@ class DetectionAdjustmentExecutor(Config):
 
 class ConfigExecutor(Config):
     name: Literal["ConfigExecutor"] = "ConfigExecutor"
-    value: Union[FilteringExecutor, DetectionAdjustmentExecutor]
+    value: Union[DetectionsFilteringExecutor, DetectionAdjustmentExecutor]
     type: Literal["executor"] = "executor"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
 
