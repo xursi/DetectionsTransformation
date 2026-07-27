@@ -15,7 +15,7 @@ class Filtering(Component):
         super().__init__(request, bootstrap)
         self.request.model = PackageModel(**self.request.data)
 
-        self.input_detections = self.request.get_param("inputDetections")
+        self.input_detections = self.request.get_param("inputDetections") or []
         self.filter_type = self.request.get_param("filterType")
         self.allowed_labels = self._parse_labels(self.request.get_param("allowedLabels"))
 

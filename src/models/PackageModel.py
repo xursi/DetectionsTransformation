@@ -5,20 +5,6 @@ from pydantic import BaseModel
 from sdks.novavision.src.base.model import Config, Configs, Input, Inputs, Output, Outputs, Package, Request, Response, Detection, BoundingBox
 
 
-"""class BoundingBox(BaseModel):
-    left: float
-    top: float
-    width: float
-    height: float
-
-
-class Detection(BaseModel):
-    boundingBox: BoundingBox
-    confidence: float
-    classLabel: str
-    classId: int
-    keyPoints: Optional[object] = None
-    imgUID: str"""
 
 
 class InputDetections(Input):
