@@ -14,7 +14,7 @@ from components.DetectionTransformation.src.models.PackageModel import (
 )
 
 
-def build_response(context):
+def build_filtering_response(context):
     outputs = FilteringOutputs(outputDetections=OutputDetections(value=context.detections))
     response = FilteringResponse(outputs=outputs)
     executor = ConfigExecutor(value=DetectionsFilteringExecutor(value=response))

@@ -7,7 +7,7 @@ from sdks.novavision.src.base.component import Component
 from sdks.novavision.src.helper.executor import Executor
 
 from components.DetectionTransformation.src.models.PackageModel import Detection, PackageModel
-from components.DetectionTransformation.src.utils.response import build_response
+from components.DetectionTransformation.src.utils.response import build_filtering_response
 
 
 class DetectionsFiltering(Component):
@@ -41,7 +41,7 @@ class DetectionsFiltering(Component):
 
     def run(self):
         self.detections = self.transform()
-        return build_response(context=self)
+        return build_filtering_response(context=self)
 
 
 if __name__ == "__main__":
