@@ -355,12 +355,31 @@ class ConfigSortByCenterY(Config):
         title = "Center Y"
 
 
+class ConfigSortByConfidence(Config):
+    name: Literal["confidence"] = "confidence"
+    value: Literal["confidence"] = "confidence"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Confidence"
+
+
 class ConfigSortBy(Config):
     """
-    Selects the attribute of the bounding box to sort the detections by.
+    Selects the attribute of the bounding box or metadata to sort the detections by.
     """
     name: Literal["sortBy"] = "sortBy"
-    value: Union[ConfigSortByXMin, ConfigSortByXMax, ConfigSortByYMin, ConfigSortByYMax, ConfigSortBySize, ConfigSortByCenterX, ConfigSortByCenterY]
+    value: Union[
+        ConfigSortByXMin, 
+        ConfigSortByXMax, 
+        ConfigSortByYMin, 
+        ConfigSortByYMax, 
+        ConfigSortBySize, 
+        ConfigSortByCenterX, 
+        ConfigSortByCenterY,
+        ConfigSortByConfidence
+    ]
     type: Literal["object"] = "object"
     field: Literal["dropdownlist"] = "dropdownlist"
 

@@ -36,6 +36,9 @@ class SortDetection(Component):
             parsed_detections.append(Detection.parse_obj(raw_detection))
 
         def get_sort_key(detection):
+            if self.sort_by == "confidence":
+                return detection.confidence
+            
             bbox = detection.boundingBox
             if self.sort_by == "x_min":
                 return bbox.left
