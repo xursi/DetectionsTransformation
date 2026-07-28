@@ -23,6 +23,8 @@ class OutputDetections(Output):
         title = "Detections"
 
 
+# --- Detections Filtering Classes ---
+
 class ConfigAllowedLabels(Config):
     """
     Specifies the list of class labels to be allowed through the filter.
@@ -109,6 +111,8 @@ class DetectionsFilteringExecutor(Config):
             "shortDescription": "Detections Filtering"
         }
 
+
+# --- Detection Adjustment Classes ---
 
 class ConfigAdjustmentTargetLabels(Config):
     """
@@ -279,13 +283,181 @@ class DetectionAdjustmentExecutor(Config):
         }
 
 
+# --- Sort Detection Classes ---
+
+class ConfigSortByXMin(Config):
+    name: Literal["x_min"] = "x_min"
+    value: Literal["x_min"] = "x_min"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "X Min"
+
+
+class ConfigSortByXMax(Config):
+    name: Literal["x_max"] = "x_max"
+    value: Literal["x_max"] = "x_max"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "X Max"
+
+
+class ConfigSortByYMin(Config):
+    name: Literal["y_min"] = "y_min"
+    value: Literal["y_min"] = "y_min"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Y Min"
+
+
+class ConfigSortByYMax(Config):
+    name: Literal["y_max"] = "y_max"
+    value: Literal["y_max"] = "y_max"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Y Max"
+
+
+class ConfigSortBySize(Config):
+    name: Literal["size"] = "size"
+    value: Literal["size"] = "size"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Size (Area)"
+
+
+class ConfigSortByCenterX(Config):
+    name: Literal["center_x"] = "center_x"
+    value: Literal["center_x"] = "center_x"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Center X"
+
+
+class ConfigSortByCenterY(Config):
+    name: Literal["center_y"] = "center_y"
+    value: Literal["center_y"] = "center_y"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Center Y"
+
+
+class ConfigSortBy(Config):
+    """
+    Selects the attribute of the bounding box to sort the detections by.
+    """
+    name: Literal["sortBy"] = "sortBy"
+    value: Union[ConfigSortByXMin, ConfigSortByXMax, ConfigSortByYMin, ConfigSortByYMax, ConfigSortBySize, ConfigSortByCenterX, ConfigSortByCenterY]
+    type: Literal["object"] = "object"
+    field: Literal["dropdownlist"] = "dropdownlist"
+
+    class Config:
+        title = "Sort By"
+        json_schema_extra = {
+            "shortDescription": "Sort Attribute"
+        }
+
+
+class ConfigAscendingTrue(Config):
+    name: Literal["True"] = "True"
+    value: Literal[True] = True
+    type: Literal["bool"] = "bool"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "True"
+
+
+class ConfigAscendingFalse(Config):
+    name: Literal["False"] = "False"
+    value: Literal[False] = False
+    type: Literal["bool"] = "bool"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "False"
+
+
+class ConfigAscending(Config):
+    """
+    Specifies sorting order: True for ascending (small to large), False for descending (large to small).
+    """
+    name: Literal["ascending"] = "ascending"
+    value: Union[ConfigAscendingTrue, ConfigAscendingFalse]
+    type: Literal["object"] = "object"
+    field: Literal["dropdownlist"] = "dropdownlist"
+
+    class Config:
+        title = "Ascending"
+        json_schema_extra = {
+            "shortDescription": "Sort Order Direction"
+        }
+
+
+class SortInputs(Inputs):
+    inputDetections: InputDetections
+
+
+class SortConfigs(Configs):
+    sortBy: ConfigSortBy
+    ascending: ConfigAscending
+
+
+class SortOutputs(Outputs):
+    outputDetections: OutputDetections
+
+
+class SortDetectionRequest(Request):
+    inputs: SortInputs
+    configs: SortConfigs
+
+    class Config:
+        json_schema_extra = {"target": "configs"}
+
+
+class SortDetectionResponse(Response):
+    outputs: SortOutputs
+
+
+class SortDetectionExecutor(Config):
+    """
+    Sorts object detections list by bounding box coordinates, size, or center points.
+    """
+    name: Literal["SortDetection"] = "SortDetection"
+    value: Union[SortDetectionRequest, SortDetectionResponse]
+    type: Literal["object"] = "object"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Sort Detection"
+        json_schema_extra = {
+            "target": {"value": 0},
+            "shortDescription": "Sort Detection list"
+        }
+
+
+# --- Package Configurations ---
+
 class ConfigExecutor(Config):
     """
     The primary task execution mode of the component.
-    Select 'Detections Filtering' to drop classes, or 'Detection Adjustment' to transform bounding boxes.
+    Select 'Detections Filtering' to drop classes, 'Detection Adjustment' to transform bounding boxes, or 'Sort Detection' to order list elements.
     """
     name: Literal["ConfigExecutor"] = "ConfigExecutor"
-    value: Union[DetectionsFilteringExecutor, DetectionAdjustmentExecutor]
+    value: Union[DetectionsFilteringExecutor, DetectionAdjustmentExecutor, SortDetectionExecutor]
     type: Literal["executor"] = "executor"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
 
