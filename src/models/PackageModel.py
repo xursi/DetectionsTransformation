@@ -5,8 +5,6 @@ from pydantic import BaseModel
 from sdks.novavision.src.base.model import Config, Configs, Input, Inputs, Output, Outputs, Package, Request, Response, Detection, BoundingBox
 
 
-
-
 class InputDetections(Input):
     name: Literal["inputDetections"] = "inputDetections"
     value: List[Detection]
@@ -26,6 +24,10 @@ class OutputDetections(Output):
 
 
 class ConfigAllowedLabels(Config):
+    """
+    Specifies the list of class labels to be allowed through the filter.
+    Input labels should be separated by commas (e.g. 'person, car'). Leave empty to allow all detections.
+    """
     name: Literal["allowedLabels"] = "allowedLabels"
     value: str = ""
     type: Literal["string"] = "string"
@@ -34,7 +36,9 @@ class ConfigAllowedLabels(Config):
 
     class Config:
         title = "Allowed Labels"
-        json_schema_extra = {"shortDescription": "Comma-separated labels to keep. Leave empty to keep all labels."}
+        json_schema_extra = {
+            "shortDescription": "Filter Labels List"
+        }
 
 
 class ConfigFilterByLabel(Config):
@@ -49,6 +53,10 @@ class ConfigFilterByLabel(Config):
 
 
 class ConfigFilterType(Config):
+    """
+    Specifies the criteria to filter detections.
+    Currently supports filtering by class labels.
+    """
     name: Literal["filterType"] = "filterType"
     value: ConfigFilterByLabel
     type: Literal["object"] = "object"
@@ -56,7 +64,9 @@ class ConfigFilterType(Config):
 
     class Config:
         title = "Filter Type"
-        json_schema_extra = {"shortDescription": "Choose the detection field used for filtering."}
+        json_schema_extra = {
+            "shortDescription": "Filter Criteria Type"
+        }
 
 
 class FilteringInputs(Inputs):
@@ -84,6 +94,9 @@ class FilteringResponse(Response):
 
 
 class DetectionsFilteringExecutor(Config):
+    """
+    Filters incoming object detections based on specific conditions such as allowed class labels.
+    """
     name: Literal["DetectionsFiltering"] = "DetectionsFiltering"
     value: Union[FilteringRequest, FilteringResponse]
     type: Literal["object"] = "object"
@@ -91,10 +104,17 @@ class DetectionsFilteringExecutor(Config):
 
     class Config:
         title = "Detections Filtering"
-        json_schema_extra = {"target": {"value": 0}}
+        json_schema_extra = {
+            "target": {"value": 0},
+            "shortDescription": "Detections Filtering"
+        }
 
 
 class ConfigAdjustmentTargetLabels(Config):
+    """
+    Specifies which class labels should undergo shifting or resizing.
+    Provide a comma-separated list of labels. If left empty, the transformation applies to all detections.
+    """
     name: Literal["targetLabels"] = "targetLabels"
     value: str = ""
     type: Literal["string"] = "string"
@@ -103,10 +123,16 @@ class ConfigAdjustmentTargetLabels(Config):
 
     class Config:
         title = "Target Labels"
-        json_schema_extra = {"shortDescription": "Target labels to adjust. Leave empty to adjust all."}
+        json_schema_extra = {
+            "shortDescription": "Target Detections Labels"
+        }
 
 
 class ConfigShiftX(Config):
+    """
+    The horizontal pixel distance to shift the bounding box.
+    Positive values shift the box to the right, negative values shift it to the left.
+    """
     name: Literal["shiftX"] = "shiftX"
     value: float = 0.0
     type: Literal["number"] = "number"
@@ -114,10 +140,16 @@ class ConfigShiftX(Config):
 
     class Config:
         title = "Shift X (Pixels)"
-        json_schema_extra = {"shortDescription": "Horizontal shift. Positive moves right, negative moves left."}
+        json_schema_extra = {
+            "shortDescription": "Horizontal Shift (px)"
+        }
 
 
 class ConfigShiftY(Config):
+    """
+    The vertical pixel distance to shift the bounding box.
+    Positive values shift the box downwards, negative values shift it upwards.
+    """
     name: Literal["shiftY"] = "shiftY"
     value: float = 0.0
     type: Literal["number"] = "number"
@@ -125,7 +157,9 @@ class ConfigShiftY(Config):
 
     class Config:
         title = "Shift Y (Pixels)"
-        json_schema_extra = {"shortDescription": "Vertical shift. Positive moves down, negative moves up."}
+        json_schema_extra = {
+            "shortDescription": "Vertical Shift (px)"
+        }
 
 
 class ConfigAdjustmentShift(Config):
@@ -141,6 +175,10 @@ class ConfigAdjustmentShift(Config):
 
 
 class ConfigScaleWidth(Config):
+    """
+    The multiplier coefficient to scale the width of the bounding box.
+    Values greater than 1.0 enlarge the box width, values less than 1.0 shrink it.
+    """
     name: Literal["scaleWidth"] = "scaleWidth"
     value: float = 1.0
     type: Literal["number"] = "number"
@@ -148,10 +186,16 @@ class ConfigScaleWidth(Config):
 
     class Config:
         title = "Scale Width (Multiplier)"
-        json_schema_extra = {"shortDescription": "Width multiplier. E.g., 1.2 to enlarge by 20%."}
+        json_schema_extra = {
+            "shortDescription": "Width Multiplier"
+        }
 
 
 class ConfigScaleHeight(Config):
+    """
+    The multiplier coefficient to scale the height of the bounding box.
+    Values greater than 1.0 enlarge the box height, values less than 1.0 shrink it.
+    """
     name: Literal["scaleHeight"] = "scaleHeight"
     value: float = 1.0
     type: Literal["number"] = "number"
@@ -159,7 +203,9 @@ class ConfigScaleHeight(Config):
 
     class Config:
         title = "Scale Height (Multiplier)"
-        json_schema_extra = {"shortDescription": "Height multiplier. E.g., 0.8 to shrink by 20%."}
+        json_schema_extra = {
+            "shortDescription": "Height Multiplier"
+        }
 
 
 class ConfigAdjustmentResize(Config):
@@ -175,6 +221,10 @@ class ConfigAdjustmentResize(Config):
 
 
 class ConfigAdjustmentType(Config):
+    """
+    Selects the geometric adjustment operation to perform on the bounding boxes.
+    Choose 'Shift' to translate the position or 'Resize' to scale the dimensions.
+    """
     name: Literal["adjustmentType"] = "adjustmentType"
     value: Union[ConfigAdjustmentShift, ConfigAdjustmentResize]
     type: Literal["object"] = "object"
@@ -182,7 +232,9 @@ class ConfigAdjustmentType(Config):
 
     class Config:
         title = "Adjustment Type"
-        json_schema_extra = {"shortDescription": "Select whether to shift or resize the bounding boxes."}
+        json_schema_extra = {
+            "shortDescription": "Box Transformation Type"
+        }
 
 
 class AdjustmentInputs(Inputs):
@@ -211,6 +263,9 @@ class AdjustmentResponse(Response):
 
 
 class DetectionAdjustmentExecutor(Config):
+    """
+    Adjusts the coordinates of bounding boxes by shifting their positions or scaling their dimensions.
+    """
     name: Literal["DetectionAdjustment"] = "DetectionAdjustment"
     value: Union[AdjustmentRequest, AdjustmentResponse]
     type: Literal["object"] = "object"
@@ -218,10 +273,17 @@ class DetectionAdjustmentExecutor(Config):
 
     class Config:
         title = "Detection Adjustment"
-        json_schema_extra = {"target": {"value": 0}}
+        json_schema_extra = {
+            "target": {"value": 0},
+            "shortDescription": "Detection Coordinate Adjustment"
+        }
 
 
 class ConfigExecutor(Config):
+    """
+    The primary task execution mode of the component.
+    Select 'Detections Filtering' to drop classes, or 'Detection Adjustment' to transform bounding boxes.
+    """
     name: Literal["ConfigExecutor"] = "ConfigExecutor"
     value: Union[DetectionsFilteringExecutor, DetectionAdjustmentExecutor]
     type: Literal["executor"] = "executor"
@@ -229,6 +291,9 @@ class ConfigExecutor(Config):
 
     class Config:
         title = "Task"
+        json_schema_extra = {
+            "shortDescription": "Transformation Action"
+        }
 
 
 class PackageConfigs(Configs):
