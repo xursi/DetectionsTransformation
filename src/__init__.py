@@ -1,1 +1,0 @@
-"""NovaVision Detection Transformation package."""
